@@ -10,11 +10,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String hash_password;
+
+    @Column(nullable = false)
+    private String role;
+
 
     public long getId(){
         return this.id;
@@ -35,5 +39,12 @@ public class User {
     }
     public void setHash_password(String hash_password){
         this.hash_password = hash_password;
+    }
+
+    public String getRole(){
+        return this.role;
+    }
+    public void setRole(String role){
+        this.role = role;
     }
 }
