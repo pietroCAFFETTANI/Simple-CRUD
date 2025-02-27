@@ -5,6 +5,7 @@ import com.REST_Project.API.Models.AuthenticationDTO;
 import com.REST_Project.API.Models.RegisterDTO;
 import com.REST_Project.API.Models.User;
 import com.REST_Project.API.Repo.UserRepo;
+import com.REST_Project.API.infra.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,9 @@ public class AuthenticationControler {
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    TokenService tokenService;
+
+    @Autowired
     private UserRepo userRepo;
 
 
@@ -35,7 +39,8 @@ public class AuthenticationControler {
         try{
             var userNamePassword = new UsernamePasswordAuthenticationToken(user.login(), user.password());
             var auth = this.authenticationManager.authenticate(userNamePassword);
-            return ResponseEntity.ok("User authenticated: " + auth.getName());
+            var token = tokenService.createToken((User) auth.getPrincipal());
+            return ResponseEntity.ok(token);
         }catch(BadCredentialsException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
